@@ -16,6 +16,7 @@ namespace WeekSchedule
         {
             InitializeComponent();
             InitSTT();
+            InitWeek();
             InitMission();
         }
 
@@ -42,6 +43,99 @@ namespace WeekSchedule
             }
         }
 
+        GroupBox[] gbweek = new GroupBox[7];
+        FlowLayoutPanel[] fpweek = new FlowLayoutPanel[7];
+
+        private int  Daytoint(string k)
+        {
+            switch (k)
+            {
+                case " Monday": return 0;
+                case " Tuesday": return 1;
+                case " Wednesday": return 2;
+                case " Thursday": return 3;
+                case " Friday": return 4;
+                case " Saturday": return 5;
+                default: return 6;
+
+            }
+        }
+
+        private string Day(int k)
+        {
+            switch(k)
+            {
+                case 0: return "Monday";
+                case 1: return "Tuesday";
+                case 2: return "Wednesday";
+                case 3: return "Thursday";
+                case 4: return "Friday";
+                case 5: return "Saturday";
+                default: return "Sunday";
+
+            }
+        }
+
+        private void InitWeek()
+        {
+            for(int i = 0; i < 7; i++)
+            {
+                gbweek[i] = new GroupBox()
+                {
+                    Text = Day(i),
+                    Size = new Size(261, 370),
+                    ForeColor = Color.Teal
+                };
+                
+                fpweek[i] = new FlowLayoutPanel()
+                {
+                    AutoScroll = true,
+                    Location = new Point(gbweek[i].Location.X + 10, gbweek[i].Location.Y + 25),
+                    Size = new Size(249,330),
+                };
+
+                gbweek[i].Controls.Add(fpweek[i]);
+                flowLayoutPanel2.Controls.Add(gbweek[i]);
+            }
+        }
+
+        static string s2 = "";
+
+        private string GetDay(string s)
+        {
+            s2 = "";
+            string s1 = "";
+            bool first = false;
+
+            for(int i=0;i<s.Length;i++)
+            {
+                if(!first)
+                {
+                    if (s[i] == ',') first = true;
+                    else s2 += s[i];
+                }
+                else
+                {
+                    if (s[i] == ',') break;
+                    else s1 += s[i];
+                }
+            }
+
+            return s1;
+        }
+
+        private void AddMissiontoCal(int k)
+        {
+            s2 = "- " + s2;
+            Label lb = new Label()
+            {
+                Text = s2,
+                AutoSize = true,
+                ForeColor= Color.Black
+            };
+            fpweek[k].Controls.Add(lb);
+        }
+
         private void InitMission()
         {
             string s;
@@ -54,6 +148,8 @@ namespace WeekSchedule
                 for (int j = 0; j < missionstt; j++)
                 {
                     CreateNewMission(i, Mission[j],j);
+                    int k = Daytoint(GetDay(Mission[j]));
+                    AddMissiontoCal(k);
                 }
 
             }
@@ -117,7 +213,6 @@ namespace WeekSchedule
                 Name = n + "_" + i,
                 ForeColor = Color.Black
             };
-
             ckb.CheckedChanged += Ckb_CheckedChanged;
 
             fpanel[n].Controls.Add(ckb);
@@ -126,6 +221,8 @@ namespace WeekSchedule
         private void Ckb_CheckedChanged(object? sender, EventArgs e)
         {
             CheckBox ckb = sender as CheckBox;
+
+            ckb.Enabled = false;
 
             ///Xulixau
             string s=ckb.Name,s1="";
@@ -159,11 +256,6 @@ namespace WeekSchedule
                 missionstt--;
                 for (int i = 0; i < missionstt; i++) Mission[i] = Temp[i];
 
-            }
-            else
-            {
-                Mission[missionstt] = ckb.Text;
-                missionstt++;
             }
 
             UpdateMission(n);
@@ -203,7 +295,10 @@ namespace WeekSchedule
             stt = 0;
             UpdateSTT();
             flowLayoutPanel1.Controls.Clear();
+
+            for (int i = 0; i < 7; i++) fpweek[i].Controls.Clear();
         }
+
 
         private void Addbtn_Click(object sender, EventArgs e)
         {
@@ -229,6 +324,9 @@ namespace WeekSchedule
             InitNumOfMission(kt);
 
             CreateNewMission(kt, MissionTxt.Text + ", " + dateTimePicker1.Text,missionstt);
+
+            int k = Daytoint(GetDay(MissionTxt.Text + ", " + dateTimePicker1.Text));
+            AddMissiontoCal(k);
 
             Mission[missionstt] = MissionTxt.Text + ", " + dateTimePicker1.Text;
             
