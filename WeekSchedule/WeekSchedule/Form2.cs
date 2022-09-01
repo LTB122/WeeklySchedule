@@ -16,7 +16,6 @@ namespace WeekSchedule
         {
             InitializeComponent();
             InitSTT();
-            InitMissionSTT();
             InitMission();
         }
 
@@ -26,7 +25,8 @@ namespace WeekSchedule
 
         GroupBox[] gbox = new GroupBox[1000];
         FlowLayoutPanel[] fpanel = new FlowLayoutPanel[1000];
-        CheckBox[] ckbox = new CheckBox[100000]; 
+
+        string[] Mission = new string[100000];
 
         private void InitSTT()
         {
@@ -42,23 +42,21 @@ namespace WeekSchedule
             }
         }
 
-        private void InitMissionSTT()
-        {
-            if (!File.Exists("NumOfMission.txt"))
-            {
-                File.WriteAllText("NumOfMission.txt", "0");
-                missionstt = 0;
-            }
-            else
-            {
-                sttstring = File.ReadAllText("NumOfMission.txt");
-                missionstt = Convert.ToInt32(sttstring);
-            }
-        }
-
         private void InitMission()
         {
-            
+            string s;
+            for (int i = 1; i <= stt; i++) 
+            {
+                s = File.ReadAllText("Role" + i.ToString() + "/Name.txt");
+                CreateNewGb(i,s);
+                InitNumOfMission(i);
+
+                for (int j = 0; j < missionstt; j++)
+                {
+                    CreateNewMission(i, Mission[j]);
+                }
+
+            }
         }
 
         private int RoleNum(string s)
@@ -70,20 +68,27 @@ namespace WeekSchedule
             return -1;
         }
 
-        private void CreateNewGb(int n)
+        private void CreateData(int n)
         {
             ///Save to Directory
-            if(!Directory.Exists("Role"+n.ToString()))  Directory.CreateDirectory("Role" + n.ToString());
+            Directory.CreateDirectory("Role" + n.ToString());
 
             ///Save To File Name
-            if(!File.Exists("Role" + n.ToString()+"/Name.txt"))
-                File.WriteAllText("Role" + n.ToString() + "/Name.txt", NameRole.Text);
-            
+            File.WriteAllText("Role" + n.ToString() + "/Name.txt", NameRole.Text);
+
+            ///Save New Num of Mission
+            File.WriteAllText("Role" + n.ToString() + "/NumOfMission.txt", "0");
+
+            missionstt = 0;
+        }
+
+        private void CreateNewGb(int n, string s)
+        {
             ///CreateNewGroupBox
             GroupBox gb = new GroupBox()
             {
                 Name = n.ToString(),
-                Text = NameRole.Text,
+                Text = s,
                 Size = new Size(404, 252)
             };
 
@@ -102,21 +107,39 @@ namespace WeekSchedule
             flowLayoutPanel1.Controls.Add(gb);
         }
 
-        private void CreateNewMission(int n)
+        private void CreateNewMission(int n,string s)
         {
             CheckBox ckb = new CheckBox()
             {
                 AutoSize = true,
-                Text = MissionTxt.Text + ", " + dateTimePicker1.Text
+                Text = s
             };
 
-            ///Save to file Mission
-            if (!File.Exists("Role" + n.ToString() + "/Mission.txt"))
-                File.WriteAllText("Role" + n.ToString() + "/Mission.txt", ckb.Text);
-            else File.AppendAllText("Role" + n.ToString() + "/Mission.txt", ckb.Text);
-
-            ckbox[missionstt] = ckb;
             fpanel[n].Controls.Add(ckb);
+        }
+
+        private void UpdateSTT()
+        {
+            sttstring = stt.ToString();
+            File.WriteAllText("NumOfRole.txt", sttstring);
+        }
+
+        private void UpdateMission(int n)
+        {
+            sttstring = missionstt.ToString();
+            File.WriteAllText("Role" + n.ToString() + "/NumOfMission.txt", sttstring);
+
+            ///Save to file Mission
+            File.WriteAllLines("Role" + n.ToString() + "/Mission.txt", Mission);
+        }
+
+        private void InitNumOfMission(int n)
+        {
+            sttstring = File.ReadAllText("Role" + n.ToString() + "/NumOfMission.txt");
+            missionstt = Convert.ToInt32(sttstring);
+
+            if(File.Exists("Role" + n.ToString() + "/Mission.txt"))
+                Mission = File.ReadAllLines("Role" + n.ToString() + "/Mission.txt");
         }
 
         private void Addbtn_Click(object sender, EventArgs e)
@@ -134,11 +157,20 @@ namespace WeekSchedule
             if(kt==-1)
             {
                 stt++;
-                CreateNewGb(stt);
+                CreateData(stt);
+                CreateNewGb(stt,NameRole.Text);
                 kt = stt;
+                UpdateSTT();
             }
+
+            InitNumOfMission(kt);
+
+            CreateNewMission(kt, MissionTxt.Text + ", " + dateTimePicker1.Text);
+
+            Mission[missionstt] = MissionTxt.Text + ", " + dateTimePicker1.Text;
+            
             missionstt++;
-            CreateNewMission(kt);
+            UpdateMission(kt);
         }
     }
 }
