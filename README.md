@@ -1,1 +1,1 @@
-# WeekSchedule
+# WeeklySchedule
