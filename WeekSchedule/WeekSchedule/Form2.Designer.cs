@@ -36,6 +36,7 @@
             this.NameRole = new System.Windows.Forms.TextBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.NewWeek = new System.Windows.Forms.Button();
+            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.NewMission.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -103,17 +104,16 @@
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.AutoScroll = true;
-            this.flowLayoutPanel1.AutoSize = true;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(12, 168);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(1035, 314);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(1900, 423);
             this.flowLayoutPanel1.TabIndex = 1;
             // 
             // NewWeek
             // 
             this.NewWeek.BackColor = System.Drawing.Color.Gainsboro;
             this.NewWeek.ForeColor = System.Drawing.Color.Teal;
-            this.NewWeek.Location = new System.Drawing.Point(530, 119);
+            this.NewWeek.Location = new System.Drawing.Point(548, 119);
             this.NewWeek.Name = "NewWeek";
             this.NewWeek.Size = new System.Drawing.Size(112, 34);
             this.NewWeek.TabIndex = 2;
@@ -121,21 +121,29 @@
             this.NewWeek.UseVisualStyleBackColor = false;
             this.NewWeek.Click += new System.EventHandler(this.NewWeek_Click);
             // 
+            // flowLayoutPanel2
+            // 
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(12, 597);
+            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(1900, 441);
+            this.flowLayoutPanel2.TabIndex = 3;
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1059, 494);
+            this.ClientSize = new System.Drawing.Size(1924, 1050);
+            this.Controls.Add(this.flowLayoutPanel2);
             this.Controls.Add(this.NewWeek);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.NewMission);
             this.Name = "Form2";
             this.Text = "Weekly Schedule";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.NewMission.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -149,5 +157,6 @@
         private FlowLayoutPanel flowLayoutPanel1;
         private DateTimePicker dateTimePicker1;
         private Button NewWeek;
+        private FlowLayoutPanel flowLayoutPanel2;
     }
 }
