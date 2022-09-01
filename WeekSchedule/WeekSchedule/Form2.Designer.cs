@@ -35,6 +35,7 @@
             this.MissionTxt = new System.Windows.Forms.TextBox();
             this.NameRole = new System.Windows.Forms.TextBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.NewWeek = new System.Windows.Forms.Button();
             this.NewMission.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -42,6 +43,7 @@
             // NewMission
             // 
             this.NewMission.Controls.Add(this.panel1);
+            this.NewMission.ForeColor = System.Drawing.Color.Teal;
             this.NewMission.Location = new System.Drawing.Point(12, 12);
             this.NewMission.Name = "NewMission";
             this.NewMission.Size = new System.Drawing.Size(512, 150);
@@ -62,6 +64,7 @@
             // 
             // dateTimePicker1
             // 
+            this.dateTimePicker1.CalendarForeColor = System.Drawing.Color.Teal;
             this.dateTimePicker1.Location = new System.Drawing.Point(194, 3);
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(300, 31);
@@ -69,16 +72,19 @@
             // 
             // Addbtn
             // 
+            this.Addbtn.BackColor = System.Drawing.Color.Gainsboro;
+            this.Addbtn.ForeColor = System.Drawing.Color.Teal;
             this.Addbtn.Location = new System.Drawing.Point(183, 77);
             this.Addbtn.Name = "Addbtn";
             this.Addbtn.Size = new System.Drawing.Size(112, 34);
             this.Addbtn.TabIndex = 2;
             this.Addbtn.Text = "Thêm";
-            this.Addbtn.UseVisualStyleBackColor = true;
+            this.Addbtn.UseVisualStyleBackColor = false;
             this.Addbtn.Click += new System.EventHandler(this.Addbtn_Click);
             // 
             // MissionTxt
             // 
+            this.MissionTxt.ForeColor = System.Drawing.SystemColors.ControlText;
             this.MissionTxt.Location = new System.Drawing.Point(3, 40);
             this.MissionTxt.Name = "MissionTxt";
             this.MissionTxt.PlaceholderText = "Nhiệm vụ";
@@ -87,6 +93,7 @@
             // 
             // NameRole
             // 
+            this.NameRole.ForeColor = System.Drawing.SystemColors.ControlText;
             this.NameRole.Location = new System.Drawing.Point(3, 3);
             this.NameRole.Name = "NameRole";
             this.NameRole.PlaceholderText = "Tên vai trò";
@@ -102,15 +109,28 @@
             this.flowLayoutPanel1.Size = new System.Drawing.Size(1035, 314);
             this.flowLayoutPanel1.TabIndex = 1;
             // 
+            // NewWeek
+            // 
+            this.NewWeek.BackColor = System.Drawing.Color.Gainsboro;
+            this.NewWeek.ForeColor = System.Drawing.Color.Teal;
+            this.NewWeek.Location = new System.Drawing.Point(530, 119);
+            this.NewWeek.Name = "NewWeek";
+            this.NewWeek.Size = new System.Drawing.Size(112, 34);
+            this.NewWeek.TabIndex = 2;
+            this.NewWeek.Text = "Tuần mới";
+            this.NewWeek.UseVisualStyleBackColor = false;
+            this.NewWeek.Click += new System.EventHandler(this.NewWeek_Click);
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1059, 494);
+            this.Controls.Add(this.NewWeek);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.NewMission);
             this.Name = "Form2";
-            this.Text = "Form2";
+            this.Text = "Weekly Schedule";
             this.NewMission.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
@@ -128,5 +148,6 @@
         private TextBox NameRole;
         private FlowLayoutPanel flowLayoutPanel1;
         private DateTimePicker dateTimePicker1;
+        private Button NewWeek;
     }
 }

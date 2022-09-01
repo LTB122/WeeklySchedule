@@ -20,7 +20,7 @@ namespace WeekSchedule
         }
 
         //Var declaration
-        static int stt = 0, missionstt = 0, missiontemp = 0;
+        static int stt = 0, missionstt = 0;
         static string sttstring="";
 
         GroupBox[] gbox = new GroupBox[1000];
@@ -89,7 +89,8 @@ namespace WeekSchedule
             {
                 Name = n.ToString(),
                 Text = s,
-                Size = new Size(404, 252)
+                Size = new Size(404, 252),
+                ForeColor = Color.Teal
             };
 
             FlowLayoutPanel fp = new FlowLayoutPanel()
@@ -113,7 +114,8 @@ namespace WeekSchedule
             {
                 AutoSize = true,
                 Text = s,
-                Name = n+"_"+i,
+                Name = n + "_" + i,
+                ForeColor = Color.Black
             };
 
             ckb.CheckedChanged += Ckb_CheckedChanged;
@@ -189,6 +191,18 @@ namespace WeekSchedule
 
             if(File.Exists("Role" + n.ToString() + "/Mission.txt"))
                 Mission = File.ReadAllLines("Role" + n.ToString() + "/Mission.txt");
+        }
+
+        private void NewWeek_Click(object sender, EventArgs e)
+        {
+            for (int i = 1; i <= stt; i++)
+            {
+                DirectoryInfo direct = new DirectoryInfo("Role" + i.ToString());
+                if(direct.Exists) direct.Delete(true);
+            }
+            stt = 0;
+            UpdateSTT();
+            flowLayoutPanel1.Controls.Clear();
         }
 
         private void Addbtn_Click(object sender, EventArgs e)
