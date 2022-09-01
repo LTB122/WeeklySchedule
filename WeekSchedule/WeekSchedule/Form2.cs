@@ -20,14 +20,14 @@ namespace WeekSchedule
         }
 
         //Var declaration
-        static int stt = 0, missionstt = 0;
+        static int stt = 0, missionstt = 0, missiontemp = 0;
         static string sttstring="";
 
         GroupBox[] gbox = new GroupBox[1000];
         FlowLayoutPanel[] fpanel = new FlowLayoutPanel[1000];
 
         string[] Mission = new string[100000];
-
+        string[] Temp = new string[100000];
         private void InitSTT()
         {
             if(!File.Exists("NumOfRole.txt"))
@@ -53,7 +53,7 @@ namespace WeekSchedule
 
                 for (int j = 0; j < missionstt; j++)
                 {
-                    CreateNewMission(i, Mission[j]);
+                    CreateNewMission(i, Mission[j],j);
                 }
 
             }
@@ -107,15 +107,64 @@ namespace WeekSchedule
             flowLayoutPanel1.Controls.Add(gb);
         }
 
-        private void CreateNewMission(int n,string s)
+        private void CreateNewMission(int n,string s, int i)
         {
             CheckBox ckb = new CheckBox()
             {
                 AutoSize = true,
-                Text = s
+                Text = s,
+                Name = n+"_"+i,
             };
 
+            ckb.CheckedChanged += Ckb_CheckedChanged;
+
             fpanel[n].Controls.Add(ckb);
+        }
+
+        private void Ckb_CheckedChanged(object? sender, EventArgs e)
+        {
+            CheckBox ckb = sender as CheckBox;
+
+            ///Xulixau
+            string s=ckb.Name,s1="";
+            int n = 0, k = 0;
+            for (int i = 0; i < s.Length; i++) 
+            {
+                if (s[i] != '_') s1 += s[i];
+                else
+                {
+                    n = Convert.ToInt32(s1);
+                    s1 = "";
+                }
+            }
+
+            k = Convert.ToInt32(s1);
+            
+            InitNumOfMission(n);
+
+            if (ckb.Checked)
+            {
+                int j = 0;
+                for (int i = 0; i < missionstt; i++)
+                {
+                    if(i!=k)
+                    {
+                        Temp[j] = Mission[i];
+                        j++;
+                    }
+                }
+
+                missionstt--;
+                for (int i = 0; i < missionstt; i++) Mission[i] = Temp[i];
+
+            }
+            else
+            {
+                Mission[missionstt] = ckb.Text;
+                missionstt++;
+            }
+
+            UpdateMission(n);
         }
 
         private void UpdateSTT()
@@ -165,7 +214,7 @@ namespace WeekSchedule
 
             InitNumOfMission(kt);
 
-            CreateNewMission(kt, MissionTxt.Text + ", " + dateTimePicker1.Text);
+            CreateNewMission(kt, MissionTxt.Text + ", " + dateTimePicker1.Text,missionstt);
 
             Mission[missionstt] = MissionTxt.Text + ", " + dateTimePicker1.Text;
             
