@@ -105,20 +105,17 @@ namespace WeekSchedule
         {
             s2 = "";
             string s1 = "";
-            bool first = false;
+            int comma = 0;
 
-            for(int i=0;i<s.Length;i++)
+            for (int i = s.Length - 1; i > -1; i--) 
             {
-                if(!first)
+                if (s[i] == ',')
                 {
-                    if (s[i] == ',') first = true;
-                    else s2 += s[i];
+                    comma++;
+                    if (comma <= 3) continue;
                 }
-                else
-                {
-                    if (s[i] == ',') break;
-                    else s1 += s[i];
-                }
+                if (comma > 1 && comma < 3) s1 = s[i] + s1;
+                if (comma >= 3) s2 = s[i] + s2;
             }
 
             return s1;
@@ -152,6 +149,7 @@ namespace WeekSchedule
                     AddMissiontoCal(k);
                 }
 
+                if (missionstt <= 0) flowLayoutPanel1.Controls.Remove(gbox[i]);
             }
         }
 
