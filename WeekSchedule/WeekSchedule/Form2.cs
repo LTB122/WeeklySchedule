@@ -136,6 +136,7 @@ namespace WeekSchedule
         private void InitMission()
         {
             string s;
+            int z = 1;
             for (int i = 1; i <= stt; i++) 
             {
                 s = File.ReadAllText("Role" + i.ToString() + "/Name.txt");
@@ -149,8 +150,14 @@ namespace WeekSchedule
                     AddMissiontoCal(k);
                 }
 
-                if (missionstt <= 0) flowLayoutPanel1.Controls.Remove(gbox[i]);
+                if (missionstt <= 0)
+                {
+                    flowLayoutPanel1.Controls.Remove(gbox[i]);
+                    z++;
+                }
             }
+
+            if (z >= stt) Getreadyfornewweek();
         }
 
         private int RoleNum(string s)
@@ -283,18 +290,23 @@ namespace WeekSchedule
                 Mission = File.ReadAllLines("Role" + n.ToString() + "/Mission.txt");
         }
 
-        private void NewWeek_Click(object sender, EventArgs e)
+        private void Getreadyfornewweek()
         {
             for (int i = 1; i <= stt; i++)
             {
                 DirectoryInfo direct = new DirectoryInfo("Role" + i.ToString());
-                if(direct.Exists) direct.Delete(true);
+                if (direct.Exists) direct.Delete(true);
             }
             stt = 0;
             UpdateSTT();
             flowLayoutPanel1.Controls.Clear();
 
             for (int i = 0; i < 7; i++) fpweek[i].Controls.Clear();
+        }
+
+        private void NewWeek_Click(object sender, EventArgs e)
+        {
+            Getreadyfornewweek();
         }
 
 
