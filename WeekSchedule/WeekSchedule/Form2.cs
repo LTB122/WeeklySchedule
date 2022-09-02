@@ -15,6 +15,7 @@ namespace WeekSchedule
         public Form2()
         {
             InitializeComponent();
+            InitDataDirectory();
             InitSTT();
             InitWeek();
             InitMission();
@@ -29,16 +30,22 @@ namespace WeekSchedule
 
         string[] Mission = new string[100000];
         string[] Temp = new string[100000];
+
+        private void InitDataDirectory()
+        {
+            if (!Directory.Exists("Data")) Directory.CreateDirectory("Data");
+        }
+
         private void InitSTT()
         {
-            if(!File.Exists("NumOfRole.txt"))
+            if(!File.Exists("Data/NumOfRole.txt"))
             {
-                File.WriteAllText("NumOfRole.txt", "0");
+                File.WriteAllText("Data/NumOfRole.txt", "0");
                 stt = 0;
             }
             else
             {
-                sttstring = File.ReadAllText("NumOfRole.txt");
+                sttstring = File.ReadAllText("Data/NumOfRole.txt");
                 stt = Convert.ToInt32(sttstring);
             }
         }
@@ -139,7 +146,7 @@ namespace WeekSchedule
             int z = 1;
             for (int i = 1; i <= stt; i++) 
             {
-                s = File.ReadAllText("Role" + i.ToString() + "/Name.txt");
+                s = File.ReadAllText("Data/Role" + i.ToString() + "/Name.txt");
                 CreateNewGb(i,s);
                 InitNumOfMission(i);
 
@@ -172,13 +179,13 @@ namespace WeekSchedule
         private void CreateData(int n)
         {
             ///Save to Directory
-            Directory.CreateDirectory("Role" + n.ToString());
+            Directory.CreateDirectory("Data/Role" + n.ToString());
 
             ///Save To File Name
-            File.WriteAllText("Role" + n.ToString() + "/Name.txt", NameRole.Text);
+            File.WriteAllText("Data/Role" + n.ToString() + "/Name.txt", NameRole.Text);
 
             ///Save New Num of Mission
-            File.WriteAllText("Role" + n.ToString() + "/NumOfMission.txt", "0");
+            File.WriteAllText("Data/Role" + n.ToString() + "/NumOfMission.txt", "0");
 
             missionstt = 0;
         }
@@ -269,32 +276,32 @@ namespace WeekSchedule
         private void UpdateSTT()
         {
             sttstring = stt.ToString();
-            File.WriteAllText("NumOfRole.txt", sttstring);
+            File.WriteAllText("Data/NumOfRole.txt", sttstring);
         }
 
         private void UpdateMission(int n)
         {
             sttstring = missionstt.ToString();
-            File.WriteAllText("Role" + n.ToString() + "/NumOfMission.txt", sttstring);
+            File.WriteAllText("Data/Role" + n.ToString() + "/NumOfMission.txt", sttstring);
 
             ///Save to file Mission
-            File.WriteAllLines("Role" + n.ToString() + "/Mission.txt", Mission);
+            File.WriteAllLines("Data/Role" + n.ToString() + "/Mission.txt", Mission);
         }
 
         private void InitNumOfMission(int n)
         {
-            sttstring = File.ReadAllText("Role" + n.ToString() + "/NumOfMission.txt");
+            sttstring = File.ReadAllText("Data/Role" + n.ToString() + "/NumOfMission.txt");
             missionstt = Convert.ToInt32(sttstring);
 
-            if(File.Exists("Role" + n.ToString() + "/Mission.txt"))
-                Mission = File.ReadAllLines("Role" + n.ToString() + "/Mission.txt");
+            if(File.Exists("Data/Role" + n.ToString() + "/Mission.txt"))
+                Mission = File.ReadAllLines("Data/Role" + n.ToString() + "/Mission.txt");
         }
 
         private void Getreadyfornewweek()
         {
             for (int i = 1; i <= stt; i++)
             {
-                DirectoryInfo direct = new DirectoryInfo("Role" + i.ToString());
+                DirectoryInfo direct = new DirectoryInfo("Data/Role" + i.ToString());
                 if (direct.Exists) direct.Delete(true);
             }
             stt = 0;
