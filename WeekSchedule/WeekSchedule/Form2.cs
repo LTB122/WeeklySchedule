@@ -143,7 +143,7 @@ namespace WeekSchedule
         private void InitMission()
         {
             string s;
-            int z = 1;
+            int z = 0;
             for (int i = 1; i <= stt; i++) 
             {
                 s = File.ReadAllText("Data/Role" + i.ToString() + "/Name.txt");
