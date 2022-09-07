@@ -140,6 +140,7 @@
             this.Name = "Form2";
             this.Text = "Weekly Schedule";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form2_FormClosing);
             this.NewMission.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

@@ -24,6 +24,7 @@ namespace WeekSchedule
         //Var declaration
         static int stt = 0, missionstt = 0;
         static string sttstring="";
+        static bool isChange = false;
 
         GroupBox[] gbox = new GroupBox[1000];
         FlowLayoutPanel[] fpanel = new FlowLayoutPanel[1000];
@@ -48,6 +49,7 @@ namespace WeekSchedule
                 sttstring = File.ReadAllText("Data/NumOfRole.txt");
                 stt = Convert.ToInt32(sttstring);
             }
+            isChange = false;
         }
 
         GroupBox[] gbweek = new GroupBox[7];
@@ -226,51 +228,12 @@ namespace WeekSchedule
                 ForeColor = Color.Black
             };
             ckb.CheckedChanged += Ckb_CheckedChanged;
-
             fpanel[n].Controls.Add(ckb);
         }
 
         private void Ckb_CheckedChanged(object? sender, EventArgs e)
         {
-            CheckBox ckb = sender as CheckBox;
-
-            ckb.Enabled = false;
-
-            ///Xulixau
-            string s=ckb.Name,s1="";
-            int n = 0, k = 0;
-            for (int i = 0; i < s.Length; i++) 
-            {
-                if (s[i] != '_') s1 += s[i];
-                else
-                {
-                    n = Convert.ToInt32(s1);
-                    s1 = "";
-                }
-            }
-
-            k = Convert.ToInt32(s1);
-            
-            InitNumOfMission(n);
-
-            if (ckb.Checked)
-            {
-                int j = 0;
-                for (int i = 0; i < missionstt; i++)
-                {
-                    if(i!=k)
-                    {
-                        Temp[j] = Mission[i];
-                        j++;
-                    }
-                }
-
-                missionstt--;
-                for (int i = 0; i < missionstt; i++) Mission[i] = Temp[i];
-
-            }
-
-            UpdateMission(n);
+            isChange = true;
         }
 
         private void UpdateSTT()
@@ -316,6 +279,45 @@ namespace WeekSchedule
             Getreadyfornewweek();
         }
 
+        private void DeleteMission()
+        {
+            for (int i = 1; i <= stt; i++)
+            {
+                int j = 0, k = 0;
+                InitNumOfMission(i);
+                foreach (CheckBox item in fpanel[i].Controls)
+                {
+                    if (!item.Checked)
+                    {
+                        Temp[k] = Mission[j];
+                        k++;
+                    }
+                    else missionstt--;
+                    Mission[j] = "";
+                    j++;
+                }
+
+                for (int h = 0; h < missionstt; h++) Mission[h] = Temp[h];
+                UpdateMission(i);
+            }
+        }
+
+        private void Form2_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if(isChange)
+            {
+                DialogResult result = MessageBox.Show("Bạn có muốn lưu những thay đổi không?",
+                    "Thông báo", MessageBoxButtons.YesNo);
+                switch(result)
+                {
+                    case DialogResult.Yes: DeleteMission();
+                        break;
+                    case DialogResult.No:
+                        break;
+                }
+
+            }
+        }
 
         private void Addbtn_Click(object sender, EventArgs e)
         {
