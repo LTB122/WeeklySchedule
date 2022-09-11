@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form2));
             this.NewMission = new System.Windows.Forms.GroupBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
@@ -137,6 +138,7 @@
             this.Controls.Add(this.NewWeek);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.NewMission);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form2";
             this.Text = "Weekly Schedule";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
