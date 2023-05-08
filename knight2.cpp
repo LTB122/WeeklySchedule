@@ -215,7 +215,7 @@ void BaseBag:: SwapHead(BaseItem * founditem) {
 void BaseBag:: DeleteHead() {
     BaseItem* tem=head;
     head=head->next;
-    tem->next=nullptr;
+    tem->next=nullptr;//ủa ở đây coi như t xóa nó r nà, ừm đúng r, xong rồi kiểm tra class khác xem
     this->currentItem--;
     if(this->head->loaiItem==Antidote) this->belongtoK->updateAntidote(this->belongtoK->showAnti()+1);
     if(this->head->loaiItem==PhoenixI) this->belongtoK->updatePhoenixDown(this->belongtoK->showPhoenixI()+1);
@@ -225,12 +225,12 @@ void BaseBag:: DeleteHead() {
 string BaseBag:: toString() const {
     string tenitem[5] = {"Antidote", "PhoenixI", "PhoenixII", "PhoenixIII", "PhoenixIV"};
     string toPrint="Bag[count=";
-    toPrint+=to_string(this->currentItem);//currentItem la num ha? ua
+    toPrint+=to_string(this->currentItem);//currentItem la num ha? ua   hết r :), oke chạy thử lại rồi fix
     BaseItem* ptr=this->head;  //may cai nay dung k? hmm thay van duoc
 
     for(int i=0;i<this->currentItem;i++){
         toPrint+=";"; 
-        toPrint+=tenitem[ptr->loaiItem];
+        toPrint+=tenitem[ptr->loaiItem];// đợi coi dùng sao
         ptr=ptr->next;
     }
     toPrint+="]"; 
@@ -275,11 +275,16 @@ ArmyKnights::ArmyKnights(const string & file_armyknights) {
     for(int i=0;i<armynum;i++){
             info>>HP>>level>>phoen>>gil>>anti;
             Armygroup[i]=Armygroup[i]->create(i+1,HP,level,gil,anti,phoen);
+            cout<<Armygroup[i]->showPhoenixI();
     }
 }
 
-ArmyKnights::~ArmyKnights() {
-    delete[] Armygroup;
+ArmyKnights::~ArmyKnights() { //ròi này phải xóa lại đúng k, này viết lúc nó còn là giờ ** r :)) ừm viết đi
+    //ủa sao giờ xóa gì nx hong, có vẫn phải duyệt lại hàm, vd thắng thì nó vẫn còn nằm đó tr ơi okk 
+    //hmm ý là lúc mà t xóa cái num thì t delete luôn con hiệp sĩ đó, hiểu chưa? ok 
+    for(int i=0;i<armynum;i++){
+        delete Armygroup[i];
+    }//này có xóa cái obj của nó không :((? hmmm tưởng nào con trỏ là thủ tiêu hết :))
     Armygroup=nullptr;
 }
 
@@ -377,15 +382,17 @@ bool ArmyKnights::adventure(Events * events) {
     for(int i=0;i<events->count();i++){
         int gett=events->get(i);
         int lv0=(i+gett)%10+1;
-        //cout<<gett<<endl;
         switch(gett){
             case 1:{
+                cout<<lv0<<endl;
             BaseOpponent* madbear= new MadBear(lv0);
+            cout<<gett<<endl;
             if(this->fight(madbear)){
-            //cout<<1<<endl;
+            cout<<1111<<endl;
                 this->printInfo();}
             else { 
             this->printInfo();
+            delete this->lastKnight();
             this->armynum--;
             if(armynum==0) return false;
             }
@@ -400,6 +407,7 @@ bool ArmyKnights::adventure(Events * events) {
                 this->printInfo();
             else { 
             this->printInfo();
+            delete this->lastKnight();
             this->armynum--;
             if(armynum==0) return false;
             }
@@ -414,6 +422,7 @@ bool ArmyKnights::adventure(Events * events) {
                 this->printInfo();
             else { 
             this->printInfo();
+            delete this->lastKnight();
             this->armynum--;
             if(armynum==0) return false;
             }
@@ -428,6 +437,7 @@ bool ArmyKnights::adventure(Events * events) {
                 this->printInfo();
             else { 
             this->printInfo();
+            delete this->lastKnight();
             this->armynum--;
             if(armynum==0) return false;
             }
@@ -442,6 +452,7 @@ bool ArmyKnights::adventure(Events * events) {
                 this->printInfo();
             else { 
             this->printInfo();
+            delete this->lastKnight();
             this->armynum--;
             if(armynum==0) return false;
             }
@@ -456,6 +467,7 @@ bool ArmyKnights::adventure(Events * events) {
                 this->printInfo();
             else { 
             this->printInfo();
+            delete this->lastKnight();
             this->armynum--;
             if(armynum==0) return false;
             }
@@ -470,6 +482,7 @@ bool ArmyKnights::adventure(Events * events) {
                 this->printInfo();
             else { 
             this->printInfo();
+            delete this->lastKnight();
             this->armynum--;
             if(armynum==0) return false;
             }
@@ -498,6 +511,7 @@ bool ArmyKnights::adventure(Events * events) {
                     this->printInfo();
                 else { 
                 this->printInfo();
+                delete this->lastKnight();
                 this->armynum--;
                 if(armynum==0) return false;
                 }
@@ -517,6 +531,7 @@ bool ArmyKnights::adventure(Events * events) {
                 }
                 else { 
                 this->printInfo();
+                delete this->lastKnight();
                 this->armynum--;
                 if(armynum==0) return false;
                 }
@@ -578,18 +593,19 @@ bool ArmyKnights::adventure(Events * events) {
             break;}
             
             case 99:{
-                if(this->sword) return true;
+                if(this->sword){this->printInfo(); return true;}
                 else if (this->hair && this->spear && this->shield){
                     int UltimeciaHP=5000;
                     double damage[3]={0.06,0.05,0.075};
                     while(armynum>0){
                         if(this->lastKnight()->showKnight()!=NORMAL){
                             UltimeciaHP-=(int)this->lastKnight()->showHP()*this->lastKnight()->showLevel()*damage[this->lastKnight()->showKnight()];
-                            if(UltimeciaHP>0){this->lastKnight()->updateHP(0); armynum--;}
+                            if(UltimeciaHP>0){this->lastKnight()->updateHP(0); delete this->lastKnight(); armynum--;}
                             else {this->printInfo(); return true;}
                         }
                         else{
-                        if(this->armynum==1) this->printInfo(); 
+                        if(this->armynum==1) this->printInfo();
+                        delete this->lastKnight();
                         this->armynum--;}
                     }
                     return false;
