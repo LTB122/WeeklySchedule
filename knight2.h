@@ -36,6 +36,11 @@ public:
     static BaseKnight * create(int id, int maxhp, int level, int gil, int antidote, int phoenixdownI);
     string toString() const;
     
+    // ~BaseKnight(){  ẩn đúng k, hiểu ý đó 
+        
+    //     delete []bag;//loi ngay day sao gio, hmm người ta kêu là không cần ư? đọc kỹ lại k hiểu :<, :)) thấy đại ý là không cần, chắc vậy
+    // }
+    
     //show
     KnightType showKnight();
     int showPhoenixI();
@@ -62,13 +67,17 @@ public:
     ItemType loaiItem;// tim nay ha :)) u thay roi, dang coi
     virtual bool canUse ( BaseKnight * knight ) = 0;
     virtual void use ( BaseKnight * knight ) = 0;
+    
+    ~BaseItem(){
+        delete next; //nma này đủ r pk? đúng rồi
+    }
 };
 
 ////Mot loat mon do/////
 class PhoenixdownI: public BaseItem{
     public:
     PhoenixdownI(){
-        loaiItem=PhoenixI;
+        loaiItem=PhoenixI;   //oke ma pk? um t thay on
         this->next=nullptr;
     }
     bool canUse (BaseKnight *);
@@ -122,13 +131,36 @@ public:
     int maxItem[4]={-1,16,14,19};
     int currentItem;
     
+    void deleteBag(BaseItem * p)
+    {
+        if(p->next!=nullptr)
+        return deleteBag(p->next);
+        else return; 
+        delete p;
+    }
+    
+    ~BaseBag(){
+        deleteBag(head);// muốn thử cách của em không?  douzo
+        // BaseItem * node1 = head;
+        // BaseItem * node2;
+        // while(node1!==nullptr)
+        // {
+        //     node2=node1;
+        //     node1=node1->next;
+        //     delete node2;
+        // }
+    }
+    
     
     BaseBag(BaseKnight * hiepsimangtui, int pI, int anti){
         currentItem=0;
         this->belongtoK=hiepsimangtui;
+        this->belongtoK->updatePhoenixDown(0);
+        this->belongtoK->updateAntidote(0);
         while(pI>0){
             BaseItem * p=new PhoenixdownI();
-            insert(p);
+            //cout<<'!'<<this->insertFirst(p)<<endl;  //tr ơi, 2 là số m cout sẵn ấy, rồi nhớ rồi :))
+            if(this->insertFirst(p)) this->insert(p);
             pI--;
         }
         
@@ -136,18 +168,17 @@ public:
         if(this->belongtoK->showKnight()!=DRAGON){
             while(anti>0){
             BaseItem * a=new Anti_dote();
-            insert(a);
+            if(this->insertFirst(a)) this->insert(a); //tren day co insert first r  để t coi coi class thuốc đúng chưa cái
             anti--;
             }
         }
-        
     }  
     
     void insert(BaseItem * additem) { //co the ghi ItemType item;
     //cout<<insertFirst(additem)<<endl;
-    if(insertFirst(additem)){
-        //cout<<"Bap"<<endl;
-        switch(additem->loaiItem){
+  //cho nay ne, ma neu t xoa di, cha hieu sao k chay luon
+        //cout<<"Bap"<<endl; //hả? cái nào không chạy? nè coi nha   đó nó vẫn k chạy, k thêm đồ vô cho t :<
+        switch(additem->loaiItem){//để coi từ   khoan từ từ        từ, nó không vô được hàm insert  
             case PhoenixI:
                 this->belongtoK->updatePhoenixDown(this->belongtoK->showPhoenixI()+1);
                 break;
@@ -159,7 +190,7 @@ public:
         this->currentItem++;
         additem->next=head;  //recheck Co phai cuoi link list se la null khong?
         head=additem;
-    }
+
 }
     
     
@@ -167,7 +198,7 @@ public:
         if(maxItem[this->belongtoK->showKnight()]==-1) return true;
         if(currentItem+1<=maxItem[this->belongtoK->showKnight()]){
             if(item->loaiItem==PhoenixI){
-                if(this->belongtoK->showPhoenixI()+1<=5)
+                if(this->belongtoK->showPhoenixI()+1<=5) 
                     return true;
                 else return false;
             }
@@ -404,14 +435,22 @@ public:
     }
 };
 
-class KnightAdventure {
-private:
+class KnightAdventure {   // doi chut đó đó, lúc chưa sửa đủ mà, thiếu 1 cái thì t thêm r coi như đủ 10
+                         // là giờ check cái sự kiện thôi đúng không? tại nãy t hay bấm save lúc sửa á :) ultr :))
+private:                 
     ArmyKnights * armyKnights;
     Events * events;
 
 public:
-    // KnightAdventure();
-    // ~KnightAdventure(); // TODO:
+    KnightAdventure()
+    {
+        armyKnights=nullptr;
+        events=nullptr;
+    };// giờ coi sự kiện ok
+    ~KnightAdventure(){
+        delete armyKnights;
+        delete events;
+    };
 
     void loadArmyKnights(const string &s){
         armyKnights=new ArmyKnights(s);
